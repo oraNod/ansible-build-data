@@ -1,0 +1,49 @@
+name: Announce a major release
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_version:
+        description: 'Package Version'
+        required: true
+      tarball_url:
+        description: 'Tarball URL'
+        required: true
+      tarball_sha:
+        description: 'Tarball SHA'
+        required: true
+      wheel_url:
+        description: 'Wheel URL'
+        required: true
+      wheel_sha:
+        description: 'Wheel SHA'
+        required: true
+      core_changelog:
+        description: 'Core Changelog URL'
+        required: true
+
+jobs:
+  generate_and_post:
+    runs-on: ubuntu-latest
+    env:
+        PACKAGE_VERSION: "${{ github.event.inputs.package_version }}"
+        TARBALL_URL: "${{ github.event.inputs.tarball_url }}"
+        TARBALL_SHA: "${{ github.event.inputs.tarball_sha }}"
+        WHEEL_URL: "${{ github.event.inputs.wheel_url }}"
+        WHEEL_SHA: "${{ github.event.inputs.wheel_sha }}"
+        CORE_CHANGELOG: "${{ github.event.inputs.core_changelog }}"
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Install jinja
+        run: pip install Jinja2
+
+      - name: Render Template
+        run: python generate_announcements.py
