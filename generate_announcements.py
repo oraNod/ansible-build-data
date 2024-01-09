@@ -16,7 +16,6 @@ template_data = {
 
 rendered_markdown = template.render(template_data)
 
-with open('rendered_output.md', 'w') as f:
-    f.write(rendered_markdown)
+print(rendered_markdown)
 
 print('Generated release announcement for discourse.')
